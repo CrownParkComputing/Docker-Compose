@@ -1,0 +1,37 @@
+version: '3.3'
+services:
+  authelia:
+    image: authelia/authelia
+    volumes:
+      - /share/docker-apps/authelia/config:/config
+    ports:
+      - 9091:9091
+    restart: unless-stopped
+    # healthcheck:
+      # disable: true
+    environment:
+      - TZ=Europe/London
+      - PUID=1000
+      - PGID=1000      
+    depends_on:
+      - redis
+    networks:
+      - proxy      
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - /share/docker-apps/authelia/redis:/data
+    expose:
+      - 6379
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/London
+      - PUID=1000
+      - PGID=1000        
+    networks:
+      - proxy
+networks:
+  proxy:
+    name: proxy-network
+    external: true      

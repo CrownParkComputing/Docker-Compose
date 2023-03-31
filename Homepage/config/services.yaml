@@ -1,0 +1,99 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/services
+- ⭐ Docker NAS Applications:
+   - NAS QNAP:
+      icon: qnap.png
+      href: http://192.168.1.210:9090 
+      description: QNAP       
+   - Dozzle:
+      icon: dozzle.png
+      href: http://192.168.1.210:9050 
+      description: Dozzle
+   - Vaultwarden:
+      icon: vaultwarden.png
+      href: http://192.168.1.210:4444 
+      description: Vaultwarden          
+
+
+- ⭐ Docker World: 
+
+   - Nginx Proxy Manager:
+      icon: nginxproxymanager.png
+      href: https://proxy.crownparkcomputing.com
+      server: my-docker # same from docker.yaml
+      container: network-nginx-app-1 # container name
+      widget:
+         type: npm
+         url: https://proxy.crownparkcomputing.com
+         username: admin@crownparkcomputing.com
+         password: YCq7DeJs9rxqB39
+
+   - Watchtower:
+      icon: watchtower.png
+      href: http://192.168.1.210:3050
+      server: my-docker # same from docker.yaml
+      container: watchtower  # container name
+      widget:
+        type: watchtower
+        url: http://192.168.1.210:3050
+        key: demotoken
+   
+   - Portainer:
+      icon: portainer.png
+      href: http://192.168.1.210:9000
+      server: my-docker # same from docker.yaml
+      container: portainer  # container name   
+      widget:
+         type: portainer
+         url: http://192.168.1.210:9000
+         env: 2
+         key: ptr_VR9QbKUbIO33QQAHAdZENfPeN6K/FM1kJ0J39PfGiss=
+
+
+
+- ⭐ Office World: 
+
+   - Paperless-ngx:
+      icon: paperless.png
+      href: https://docs.crownparkcomputing.com
+      server: my-docker # same from docker.yaml
+      container: Paperless-Web # container name         
+      widget:
+         type: paperlessngx
+         url: https://docs.crownparkcomputing.com
+         username: Admin
+         password: YCq7DeJs9rxqB39    
+      
+
+- ⭐ Download Tools:
+   - Qbittorrent:
+      icon: qbittorrent.png
+      href: http://192.168.1.210:8080
+      server: my-docker # same from docker.yaml
+      container: qbittorrent  # container name
+      widget:
+        type: qbittorrent
+        url: http://192.168.1.210:8080
+        username: admin
+        password: adminadmin
+
+   - SABnzbd:
+      icon: sabnzbd.png
+      href: http://192.168.1.210:7001
+      server: my-docker # same from docker.yaml
+      container: sabnzbd  # container name
+      widget:
+        type: sabnzbd
+        url: http://192.168.1.210:7001
+        key: 44b7596d6952470ca6bdc930c54152ba
+
+   - Prowlarr:
+      icon: prowlarr.png
+      href: http://192.168.1.210:9696
+      server: my-docker # same from docker.yaml
+      container: prowlarr  # container name
+      widget:
+         type: prowlarr
+         url: http://192.168.1.210:9696
+         key: fbb6ce740a5c4a2ea1aee8925e7ac3ad  
