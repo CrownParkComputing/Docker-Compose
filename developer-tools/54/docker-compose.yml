@@ -1,0 +1,30 @@
+version: "2.1"
+services:
+  openvscode-server:
+    image: lscr.io/linuxserver/openvscode-server:latest
+    container_name: openvscode-server
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+      - CONNECTION_TOKEN= #optional
+      - CONNECTION_SECRET= #optional
+      - SUDO_PASSWORD=password #optional
+      - SUDO_PASSWORD_HASH= #optional
+    volumes:
+      - /share/docker-apps/openvscode/config:/config
+    ports:
+      - 4010:3000
+    restart: unless-stopped      
+      
+  it-tools:
+    ports:
+      - '4011:80'
+    container_name: it-tools
+    image: corentinth/it-tools
+    restart: unless-stopped
+
+networks:
+  default:
+    name: proxy-network
+    external: true      

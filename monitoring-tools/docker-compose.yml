@@ -1,0 +1,86 @@
+version: "2.1"
+services:
+  changedetection:
+    image: lscr.io/linuxserver/changedetection.io:latest
+    container_name: ChangeDetection
+    environment:
+      PUID: 1000
+      PGID: 100
+      TZ: Europe/London 
+    volumes:
+      - /share/docker-apps/changedetection/config:/config
+    ports:
+      - 5000:5000
+    restart: unless-stopped
+
+  uptimekuma:
+    container_name: Uptime-Kuma
+    hostname: uptime-kuma
+    image: louislam/uptime-kuma
+    environment:
+      PUID: 1000
+      PGID: 100
+      TZ: Europe/London 
+    ports:
+      - 5001:3001
+    volumes:
+      - /share/docker-apps/uptimekuma:/app/data
+    restart: unless-stopped
+
+  watchyourlan:
+    image: aceberg/watchyourlan
+    container_name: WatchYourLAN
+    environment:
+      TZ: Europe/London                 # required: needs your TZ for correct time
+      IFACE: "eth0"                    # required: 1 or more interface
+      DBPATH: "/data/db.sqlite"         # optional, default: /data/db.sqlite
+      GUIIP: "192.168.1.210"            # optional, default: localhost
+      GUIPORT: "8840"                   # optional, default: 8840
+      TIMEOUT: "120"                    # optional, time in seconds, default: 60
+      THEME: "darkly"                   # optional
+    network_mode: "host"
+    restart: unless-stopped
+    volumes:
+      - /share/docker-apps/watchyourlan/data:/data
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: Watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_SCHEDULE: "0 0 4 * * *"    
+      WATCHTOWER_CLEANUP: true    
+      WATCHTOWER_NOTIFICATIONS: email
+      WATCHTOWER_NOTIFICATIONS_HOSTNAME: "Docker Images"
+      WATCHTOWER_NOTIFICATION_EMAIL_FROM: admin@crownparkcomputing.com
+      WATCHTOWER_NOTIFICATION_EMAIL_TO: jon@crownparkcomputing.com
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER: mail.crownparkcomputing.com
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT: 587
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER: admin@crownparkcomputing.com
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD: "%cw]KBw!UXo-"
+
+  speedtest:
+    container_name: speedtest
+    image: henrywhitaker3/speedtest-tracker
+    ports:
+      - 8765:80
+    volumes:
+      - /share/docker-apps/speedtest-tracker:/config
+    environment:
+      PUID: 1000
+      PGID: 100
+      TZ: Europe/London 
+      OOKLA_EULA_GDPR: true
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "200k"
+    restart: unless-stopped      
+        
+networks:
+  default:
+    name: proxy-network
+    external: true
+    
