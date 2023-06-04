@@ -1,0 +1,46 @@
+version: "3.3"
+services:
+  homepage:
+    image: ghcr.io/benphelps/homepage:latest
+    container_name: homepage
+    ports:
+      - 3050:3000
+    volumes:
+      - /share/docker-apps-data/homepage/config:/app/config # Make sure your local config directory exists
+      - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations, see alternative methods
+    environment:
+      TZ: Europe/London
+    restart: always
+    
+  filebrowser:
+    image: hurlenko/filebrowser
+    container_name: filebrowser
+    ports:
+      - 3060:8080
+    volumes:
+      - /share:/data
+      - /share/docker-apps-data/filebrowser/config:/config
+    environment:
+      TZ: Europe/London      
+    restart: always
+    
+  watchtower:     
+    image: containrrr/watchtower
+    container_name: watchtower 
+    ports:
+      - 3070:8080
+    restart: always 
+    environment: 
+      WATCHTOWER_SCHEDULE: "0 0 1 * * *" 
+      TZ: Europe/London      
+      WATCHTOWER_CLEANUP: "true" 
+      WATCHTOWER_DEBUG: "true"      
+      WATCHTOWER_NOTIFICATIONS: "email" 
+      WATCHTOWER_NOTIFICATION_EMAIL_FROM: "admin@crownparkcomputing.com"
+      WATCHTOWER_NOTIFICATION_EMAIL_TO: "jon@crownparkcomputing.com" 
+      # you have to use a network alias here, if you use your own certificate 
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER: "10.1.149.19" 
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT: "465" 
+      WATCHTOWER_NOTIFICATION_EMAIL_DELAY: 2 
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock    

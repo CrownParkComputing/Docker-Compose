@@ -1,0 +1,82 @@
+version: "2.1"
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+      - VERSION=docker
+      - PLEX_CLAIM= #optional
+    volumes:
+      - /share/docker-apps/plex:/config
+      - /share/plex-media/tv:/tv
+      - /share/plex-media/movies:/movies
+    restart: unless-stopped
+    
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+    volumes:
+      - /share/docker-apps/prowlarr/data:/config
+      - /share/downloads:/downloads      
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+    volumes:
+      - /share/docker-apps/sonarr/data:/config
+      - /share/plex-media/tv:/tv #optional  
+      - /share/downloads:/downloads          
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+    volumes:
+      - /share/docker-apps/radarr/data:/config
+      - /share/plex-media/movies:/movies #optional
+      - /share/downloads:/downloads          
+    ports:
+      - 7878:7878
+    restart: unless-stopped    
+    
+
+
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+    volumes:
+      - /share/docker-apps/tautulli:/config
+    ports:
+      - 8181:8181
+    restart: unless-stopped    
+
+networks:
+  default:
+    name: proxy-network
+    external: true
+    

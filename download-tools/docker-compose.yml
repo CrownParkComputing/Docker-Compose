@@ -1,0 +1,72 @@
+version: "2.1"
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+    volumes:
+      - /share/docker-apps/SABnzbd/data:/config
+      - /share/downloads:/downloads #optional
+      - /share/downloads/incomplete/downloads:/incomplete-downloads #optional
+    ports:
+      - 7080:8080
+    restart: unless-stopped
+
+  jdownloader-2:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader-2
+    ports:
+      - "5800:5800"
+    volumes:
+      - "/share/docker-apps/jdownloader-2/jdownloader-2:/config:rw"
+      - "/share/downloads/jdownloader:/output:rw"    
+    restart: unless-stopped
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+      - WEBUI_PORT=7090
+    volumes:
+      - /share/docker-apps/qbittorrent/config:/config
+      - /share/downloads:/downloads
+      - /share/plex-media:/plex-media
+    ports:
+      - 7090:7090
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped      
+
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Etc/UTC
+      - TRANSMISSION_WEB_HOME= #optional
+      - USER= #optional
+      - PASS= #optional
+      - WHITELIST= #optional
+      - PEERPORT= #optional
+      - HOST_WHITELIST= #optional
+    volumes:
+      - /share/docker-apps/transmission/data:/config
+      - /share/downloads/transmission:/downloads
+      - /share/plex-media/:/plex-media
+    ports:      
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped     
+    
+networks:
+  default:
+    name: proxy-network
+    external: true    
